@@ -18,7 +18,7 @@ func main() {
 // RoundRobinBalancer is a load balancer
 type RoundRobinBalancer struct {
 	sync.Mutex
-	nodes []Node
+	nodes []*Node
 }
 
 // Node is server to handle request
@@ -41,8 +41,9 @@ func (b *RoundRobinBalancer) Swap(i, j int) {
 
 // Init make connection with count of server
 func (b *RoundRobinBalancer) Init(serverCount int) {
+	b.nodes = make([]*Node, 0, serverCount)
 	for i := 0; i < serverCount; i++ {
-		b.nodes = append(b.nodes, Node{0, i})
+		b.nodes = append(b.nodes, &Node{0, i})
 	}
 }
 
@@ -59,9 +60,9 @@ func (b *RoundRobinBalancer) GiveStat() []int {
 // GiveNode make request to server
 func (b *RoundRobinBalancer) GiveNode() int {
 	b.Lock()
+	defer b.Unlock()
 	sort.Sort(b)
 	b.nodes[0].requestCount++
-	defer b.Unlock()
 
 	return b.nodes[0].nodeID
 }
