@@ -13,6 +13,7 @@ func TestMain(t *testing.T) {
 			for i := 0; i < 10; i++ {
 				out <- i
 			}
+			close(out)
 		}),
 		job(func(in, out chan interface{}) {
 			for i := range in {
@@ -20,14 +21,17 @@ func TestMain(t *testing.T) {
 					out <- i
 				}
 			}
+			close(out)
 		}), job(func(in, out chan interface{}) {
 			for value := range in {
 				out <- interface{}(value.(int) * 10)
 			}
+			close(out)
 		}), job(func(in, out chan interface{}) {
 			for val := range in {
 				res = append(res, val)
 			}
+			close(out)
 		}),
 	}
 
@@ -48,6 +52,7 @@ func TestMain(t *testing.T) {
 			for _, word := range []string{"Hello", "World"} {
 				out <- word
 			}
+			close(out)
 		}),
 		job(func(in, out chan interface{}) {
 			for word := range in {
@@ -61,6 +66,7 @@ func TestMain(t *testing.T) {
 					}
 				}
 			}
+			close(out)
 		}),
 	}
 
