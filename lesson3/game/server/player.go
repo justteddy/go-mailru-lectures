@@ -3,9 +3,10 @@ package main
 import "net"
 
 type Player struct {
-	name  string
-	input chan string
-	conn  net.Conn
+	name     string
+	location Locatable
+	input    chan string
+	conn     net.Conn
 }
 
 // NewPlayer creates a new player with name
